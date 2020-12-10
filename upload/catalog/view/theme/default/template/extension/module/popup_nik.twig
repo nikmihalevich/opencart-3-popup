@@ -1,0 +1,117 @@
+<style>
+  .modal-dialog{{ module }} {
+  {% if size_type == '0' %}
+    width: {{ width }}px;
+  {% else %}
+    width: {{ width }}vw;
+  {% endif %}
+  }
+  .modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    opacity: 1;
+  }
+</style>
+
+<div id="Modal{{ module }}" class="modal fade popup_{{ module }}" role="dialog">
+  <div class="modal-dialog modal-dialog{{ module }}">
+
+    <!-- Modal content-->
+    <div class="modal-content popup_content_{{ module }}">
+      <button type="button" class="close modal-close" data-dismiss="modal">&times;</button>
+      {% if title %}
+      <div class="modal-header popup_header_{{ module }}">
+        <h4 class="modal-title">{{ title }}</h4>
+      </div>
+      {% endif %}
+      <div class="modal-body popup_body_{{ module }}">
+        {{ text }}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    {% if show_type == "0" %}
+      $('.{{ button_class }}').each(function (i, elem) {
+        $(elem).attr('data-toggle', 'modal');
+        $(elem).attr('data-target', '#Modal{{ module }}');
+      });
+    {% else %}
+      let interval = {{ show_freq }};
+      {% if show_freq_type == "0" %}
+      interval = interval * 60 * 1000;
+      {% elseif show_freq_type == "1" %}
+      interval = interval * 60 * 60 * 1000;
+      {% elseif show_freq_type == "2" %}
+      interval = interval * 60 * 60 * 24 * 1000;
+      {% elseif show_freq_type == "3" %}
+      interval = interval * 60 * 60 * 24 * 7 * 1000;
+      {% elseif show_freq_type == "4" %}
+      interval = interval * 60 * 60 * 24 * 7 * 30 * 1000;
+      {% endif %}
+      setInterval(function () {
+        autoPopup(interval)
+      }, 3000);
+    {% endif  %}
+  })
+
+  function autoPopup(interval) {
+    let now = new Date();
+
+    let popupTimestamp = getCookie("popup{{ module }}");
+    if(popupTimestamp) {
+      if(parseInt(popupTimestamp) < now.getTime()) {
+        // show modal and rewrite timestamp
+        $('#Modal{{ module }}').modal('show');
+        setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+      }
+    } else {
+      // write timestamp
+      setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+    }
+  }
+
+  // возвращает куки с указанным name,
+  // или undefined, если ничего не найдено
+  function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+  }
+
+  function setCookie(name, value, options = {}) {
+
+    options = {
+      path: '/',
+      // при необходимости добавьте другие значения по умолчанию
+      ...options
+    };
+
+    if (options.expires instanceof Date) {
+      options.expires = options.expires.toUTCString();
+    }
+
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+      updatedCookie += "; " + optionKey;
+      let optionValue = options[optionKey];
+      if (optionValue !== true) {
+        updatedCookie += "=" + optionValue;
+      }
+    }
+
+    document.cookie = updatedCookie;
+  }
+
+  function deleteCookie(name) {
+    setCookie(name, "", {
+      'max-age': -1
+    })
+  }
+</script>
