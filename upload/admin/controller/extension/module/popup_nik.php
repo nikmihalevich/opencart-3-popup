@@ -39,6 +39,18 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$data['error_width'] = '';
 		}
 
+		if (isset($this->error['show_freq'])) {
+			$data['error_show_freq'] = $this->error['show_freq'];
+		} else {
+			$data['error_show_freq'] = '';
+		}
+
+		if (isset($this->error['button_class'])) {
+			$data['error_button_class'] = $this->error['button_class'];
+		} else {
+			$data['error_button_class'] = '';
+		}
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -176,6 +188,16 @@ class ControllerExtensionModulePopupNik extends Controller {
 		if (!$this->request->post['width']) {
 			$this->error['width'] = $this->language->get('error_width');
 		}
+
+        if ($this->request->post['show_type'] == 1) {
+            if(!$this->request->post['show_freq']) {
+                $this->error['show_freq'] = $this->language->get('error_show_freq');
+            }
+        } else {
+            if(!$this->request->post['button_class']) {
+                $this->error['button_class'] = $this->language->get('error_button_class');
+            }
+        }
 
 		return !$this->error;
 	}

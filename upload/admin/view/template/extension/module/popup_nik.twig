@@ -101,6 +101,9 @@
                 <label class="col-sm-2 control-label" for="input-button-class"></label>
                 <div class="col-sm-10">
                   <input type="text" name="button_class" value="{{ button_class }}" placeholder="{{ entry_button_class }}" id="input-button-class" class="form-control" />
+                  {% if error_button_class %}
+                    <div class="text-danger">{{ error_button_class }}</div>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -111,6 +114,9 @@
                   <div class="row">
                     <div class="col-sm-3">
                       <input type="text" name="show_freq" value="{{ show_freq }}" placeholder="{{ entry_show_freq }}" id="input-show-freq" class="form-control" />
+                      {% if error_show_freq %}
+                        <div class="text-danger">{{ error_show_freq }}</div>
+                      {% endif %}
                     </div>
                     <div class="col-sm-9">
                       <select name="show_freq_type" id="input-show-freq-type" class="form-control">

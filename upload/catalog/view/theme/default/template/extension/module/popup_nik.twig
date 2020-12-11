@@ -1,10 +1,10 @@
 <style>
-  .modal-dialog{{ module }} {
-  {% if size_type == '0' %}
-    width: {{ width }}px;
-  {% else %}
-    width: {{ width }}vw;
-  {% endif %}
+  @media (min-width: 768px) {
+    .modal-dialog{{ module }} {
+    {% if size_type == '0' %} width: {{ width }}px;
+    {% else %} width: {{ width }}vw;
+    {% endif %}
+    }
   }
   .modal-close {
     position: absolute;
