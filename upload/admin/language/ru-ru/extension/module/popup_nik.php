@@ -10,6 +10,7 @@ $_['text_pixel']       = 'Пиксели';
 $_['text_percent']     = 'Проценты';
 $_['text_auto']        = 'Автоматически';
 $_['text_onclick']     = 'По клику';
+$_['text_onhover']     = 'По наведению';
 $_['text_minute']      = 'Мин';
 $_['text_hour']        = 'Час';
 $_['text_day']         = 'День';

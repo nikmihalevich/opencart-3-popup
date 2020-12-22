@@ -1,3 +1,27 @@
+{% if show_type == "2" %}
+  <style>
+    .tooltip.in {
+      opacity: 1;
+    }
+    .tooltip-arrow {
+      border-top-color: #ddd !important;
+    }
+    .tooltip-inner {
+      max-width: fit-content;
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #ddd;
+      text-align: left;
+      padding: 5px;
+    }
+    .tooltip-inner p {
+      display: flex;
+      align-items: center;
+    }
+  </style>
+{% endif %}
+
+{% if show_type != "2" %}
 <style>
   @media (min-width: 768px) {
     .modal-dialog{{ module }} {
@@ -21,6 +45,7 @@
   }
 </style>
 
+
 <div id="Modal{{ module }}" class="modal fade popup_{{ module }}" role="dialog">
   <div class="modal-dialog modal-dialog{{ module }}">
 
@@ -40,6 +65,8 @@
   </div>
 </div>
 
+{% endif %}
+
 <script type="text/javascript">
   $(document).ready(function () {
     {% if show_type == "0" %}
@@ -47,7 +74,7 @@
         $(elem).attr('data-toggle', 'modal');
         $(elem).attr('data-target', '#Modal{{ module }}');
       });
-    {% else %}
+    {% elseif show_type == "1" %}
       let interval = {{ show_freq }};
       {% if show_freq_type == "0" %}
       interval = interval * 60 * 1000;
@@ -63,6 +90,18 @@
       setInterval(function () {
         autoPopup(interval)
       }, 3000);
+    {% else %}
+      $('.{{ button_class }}').each(function (i, elem) {
+        $(elem).attr('data-toggle', 'tooltip');
+        $(elem).attr('data-html', 'true');
+        $(elem).attr('title', '{{ text }}');
+        $(elem).tooltip({
+          animated: 'fade',
+          placement: 'top',
+          html: true
+        });
+        // $(elem).tooltip("show")
+      });
     {% endif  %}
   })
 

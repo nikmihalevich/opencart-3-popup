@@ -85,13 +85,10 @@
                 <label class="col-sm-2 control-label" for="input-show-type">{{ entry_show_type }}</label>
                 <div class="col-sm-10">
                   <select name="show_type" id="input-show-type" class="form-control">
-                    {% if show_type %}
-                      <option value="0">{{ text_onclick }}</option>
-                      <option value="1" selected="selected">{{ text_auto }}</option>
-                    {% else %}
-                      <option value="0" selected="selected">{{ text_onclick }}</option>
-                      <option value="1">{{ text_auto }}</option>
-                    {% endif %}
+                    <option value="0" {% if show_type == '0' %} selected="selected" {% endif %}>{{ text_onclick }}</option>
+                    <option value="1" {% if show_type == '1' %} selected="selected" {% endif %}>{{ text_auto }}</option>
+                    <option value="2" {% if show_type == '2' %} selected="selected" {% endif %}>{{ text_onhover }}</option>
+
                   </select>
                 </div>
               </div>
@@ -158,50 +155,23 @@
   <script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
 
   <script type="text/javascript"><!--
-$('input[name=\'product_name\']').autocomplete({
-	source: function(request, response) {
-		$.ajax({
-			url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
-			dataType: 'json',
-			success: function(json) {
-				response($.map(json, function(item) {
-					return {
-						label: item['name'],
-						value: item['product_id']
-					}
-				}));
-			}
-		});
-	},
-	select: function(item) {
-		$('input[name=\'product_name\']').val('');
-		
-		$('#featured-product' + item['value']).remove();
-		
-		$('#featured-product').append('<div id="featured-product' + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="product[]" value="' + item['value'] + '" /></div>');	
-	}
-})
 
-if($('#input-show-type').val() === "0") {
-  $('.button_class').show()
-  $('.show_frequency').hide()
-} else {
+if($('#input-show-type').val() === "1") {
   $('.button_class').hide()
   $('.show_frequency').show()
+} else {
+  $('.button_class').show()
+  $('.show_frequency').hide()
 }
 
 $('#input-show-type').change(function() {
-  if($(this).val() === "0") {
-    $('.button_class').show()
-    $('.show_frequency').hide()
-  } else {
+  if($(this).val() === "1") {
     $('.button_class').hide()
     $('.show_frequency').show()
+  } else {
+    $('.button_class').show()
+    $('.show_frequency').hide()
   }
 })
-	
-$('#featured-product').delegate('.fa-minus-circle', 'click', function() {
-	$(this).parent().remove();
-});
 //--></script></div>
 {{ footer }}
