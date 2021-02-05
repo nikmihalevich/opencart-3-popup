@@ -16,6 +16,10 @@ $_['text_hour']        = 'Час';
 $_['text_day']         = 'День';
 $_['text_week']        = 'Неделя';
 $_['text_month']       = 'Месяц';
+$_['text_top']         = 'Сверху';
+$_['text_bottom']      = 'Снизу';
+$_['text_left']        = 'Слева';
+$_['text_right']       = 'Справа';
 
 // Entry
 $_['entry_name']       = 'Название модуля';
@@ -26,6 +30,8 @@ $_['entry_size_window']= 'Размер окна';
 $_['entry_show_type']  = 'Принцип показа окна';
 $_['entry_show_freq']  = 'Частота показа окна';
 $_['entry_button_class']= 'Введите класс кнопки';
+$_['entry_class_onhover']= 'Введите класс';
+$_['entry_class_onhover_position'] = 'Позиция отображения';
 $_['entry_status']     = 'Статус';
 
 // Help
@@ -38,4 +44,5 @@ $_['error_width']      = 'Введите ширину изображения!';
 $_['error_height']     = 'Введите высоту изображения!';
 $_['error_show_freq']  = 'Введите частоту автоматического показа!';
 $_['error_button_class']= 'Введите класс кнопки показа!';
+$_['error_class_onhover']= 'Введите класс для показа!';
 

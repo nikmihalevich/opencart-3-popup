@@ -51,6 +51,12 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$data['error_button_class'] = '';
 		}
 
+		if (isset($this->error['class_onhover'])) {
+			$data['error_class_onhover'] = $this->error['class_onhover'];
+		} else {
+			$data['error_class_onhover'] = '';
+		}
+
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -137,6 +143,22 @@ class ControllerExtensionModulePopupNik extends Controller {
             $data['button_class'] = '';
         }
 
+        if (isset($this->request->post['class_onhover'])) {
+            $data['class_onhover'] = $this->request->post['class_onhover'];
+        } elseif (!empty($module_info)) {
+            $data['class_onhover'] = $module_info['class_onhover'];
+        } else {
+            $data['class_onhover'] = '';
+        }
+
+        if (isset($this->request->post['class_onhover_position'])) {
+            $data['class_onhover_position'] = $this->request->post['class_onhover_position'];
+        } elseif (!empty($module_info)) {
+            $data['class_onhover_position'] = $module_info['class_onhover_position'];
+        } else {
+            $data['class_onhover_position'] = 'top';
+        }
+
         if (isset($this->request->post['show_freq'])) {
             $data['show_freq'] = $this->request->post['show_freq'];
         } elseif (!empty($module_info)) {
@@ -193,9 +215,13 @@ class ControllerExtensionModulePopupNik extends Controller {
             if(!$this->request->post['show_freq']) {
                 $this->error['show_freq'] = $this->language->get('error_show_freq');
             }
-        } else {
+        } else if($this->request->post['show_type'] == 0) {
             if(!$this->request->post['button_class']) {
                 $this->error['button_class'] = $this->language->get('error_button_class');
+            }
+        } else if($this->request->post['show_type'] == 2) {
+            if(!$this->request->post['class_onhover']) {
+                $this->error['class_onhover'] = $this->language->get('error_class_onhover');
             }
         }
 

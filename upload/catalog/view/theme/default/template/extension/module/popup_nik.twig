@@ -92,13 +92,13 @@
         autoPopup(interval)
       }, 3000);
     {% else %}
-      $('.{{ button_class }}').each(function (i, elem) {
+      $('.{{ class_onhover }}').each(function (i, elem) {
         $(elem).attr('data-toggle', 'tooltip');
         $(elem).attr('data-html', 'true');
         $(elem).attr('title', '{{ text }}');
         $(elem).tooltip({
           animated: 'fade',
-          placement: 'top',
+          placement: '{{ class_onhover_position }}',
           html: true
         });
       });
