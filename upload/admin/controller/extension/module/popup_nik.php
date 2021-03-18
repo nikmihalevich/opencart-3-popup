@@ -39,6 +39,12 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$data['error_width'] = '';
 		}
 
+		if (isset($this->error['top_distance'])) {
+			$data['error_top_distance'] = $this->error['top_distance'];
+		} else {
+			$data['error_top_distance'] = '';
+		}
+
 		if (isset($this->error['show_freq'])) {
 			$data['error_show_freq'] = $this->error['show_freq'];
 		} else {
@@ -49,12 +55,6 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$data['error_button_class'] = $this->error['button_class'];
 		} else {
 			$data['error_button_class'] = '';
-		}
-
-		if (isset($this->error['class_onhover'])) {
-			$data['error_class_onhover'] = $this->error['class_onhover'];
-		} else {
-			$data['error_class_onhover'] = '';
 		}
 
 		$data['breadcrumbs'] = array();
@@ -93,6 +93,8 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$module_info = $this->model_setting_module->getModule($this->request->get['module_id']);
 		}
 
+        $this->load->model('tool/image');
+
 		$data['user_token'] = $this->session->data['user_token'];
 
 		if (isset($this->request->post['name'])) {
@@ -127,6 +129,58 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$data['size_type'] = 0;
 		}
 
+		if (isset($this->request->post['window_type'])) {
+			$data['window_type'] = $this->request->post['window_type'];
+		} elseif (!empty($module_info)) {
+			$data['window_type'] = $module_info['window_type'];
+		} else {
+			$data['window_type'] = 0;
+		}
+
+        if (isset($this->request->post['top_distance'])) {
+            $data['top_distance'] = $this->request->post['top_distance'];
+        } elseif (!empty($module_info)) {
+            $data['top_distance'] = $module_info['top_distance'];
+        } else {
+            $data['top_distance'] = '';
+        }
+
+        if (isset($this->request->post['top_distance_unit'])) {
+            $data['top_distance_unit'] = $this->request->post['top_distance_unit'];
+        } elseif (!empty($module_info)) {
+            $data['top_distance_unit'] = $module_info['top_distance_unit'];
+        } else {
+            $data['top_distance_unit'] = 'px';
+        }
+
+        if (isset($this->request->post['window_location'])) {
+            $data['window_location'] = $this->request->post['window_location'];
+        } elseif (!empty($module_info)) {
+            $data['window_location'] = $module_info['window_location'];
+        } else {
+            $data['window_location'] = 0;
+        }
+
+        if (isset($this->request->post['window_bg_color'])) {
+            $data['window_bg_color'] = $this->request->post['window_bg_color'];
+        } elseif (!empty($module_info)) {
+            $data['window_bg_color'] = $module_info['window_bg_color'];
+        } else {
+            $data['window_bg_color'] = '';
+        }
+
+        if (isset($this->request->post['window_bg_image'])) {
+            $data['window_bg_image'] = $this->request->post['window_bg_image'];
+        } elseif (!empty($module_info)) {
+            $data['window_bg_image'] = $module_info['window_bg_image'];
+        } else {
+            $data['window_bg_image'] = '';
+        }
+
+        $data['thumb'] = $data['window_bg_image'] ? $this->model_tool_image->resize($data['window_bg_image'], 100, 100) : $this->model_tool_image->resize('no_image.png', 40, 40);
+
+        $data['img_placeholder'] = $this->model_tool_image->resize('no_image.png', 40, 40);
+
         if (isset($this->request->post['show_type'])) {
             $data['show_type'] = $this->request->post['show_type'];
         } elseif (!empty($module_info)) {
@@ -141,22 +195,6 @@ class ControllerExtensionModulePopupNik extends Controller {
             $data['button_class'] = $module_info['button_class'];
         } else {
             $data['button_class'] = '';
-        }
-
-        if (isset($this->request->post['class_onhover'])) {
-            $data['class_onhover'] = $this->request->post['class_onhover'];
-        } elseif (!empty($module_info)) {
-            $data['class_onhover'] = $module_info['class_onhover'];
-        } else {
-            $data['class_onhover'] = '';
-        }
-
-        if (isset($this->request->post['class_onhover_position'])) {
-            $data['class_onhover_position'] = $this->request->post['class_onhover_position'];
-        } elseif (!empty($module_info)) {
-            $data['class_onhover_position'] = $module_info['class_onhover_position'];
-        } else {
-            $data['class_onhover_position'] = 'top';
         }
 
         if (isset($this->request->post['show_freq'])) {
@@ -207,6 +245,12 @@ class ControllerExtensionModulePopupNik extends Controller {
 			$this->error['name'] = $this->language->get('error_name');
 		}
 
+		if ($this->request->post['window_type'] == 1) {
+		    if($this->request->post['top_distance'] == '') {
+                $this->error['top_distance'] = $this->language->get('error_top_distance');
+            }
+        }
+
 		if (!$this->request->post['width']) {
 			$this->error['width'] = $this->language->get('error_width');
 		}
@@ -215,13 +259,9 @@ class ControllerExtensionModulePopupNik extends Controller {
             if(!$this->request->post['show_freq']) {
                 $this->error['show_freq'] = $this->language->get('error_show_freq');
             }
-        } else if($this->request->post['show_type'] == 0) {
+        } else {
             if(!$this->request->post['button_class']) {
                 $this->error['button_class'] = $this->language->get('error_button_class');
-            }
-        } else if($this->request->post['show_type'] == 2) {
-            if(!$this->request->post['class_onhover']) {
-                $this->error['class_onhover'] = $this->language->get('error_class_onhover');
             }
         }
 

@@ -53,8 +53,46 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="input-title">* {{ entry_size_window }}</label>
+            <label class="col-sm-2 control-label" for="input-window-type">{{ entry_window_type }}</label>
             <div class="col-sm-10">
+              <select name="window_type" id="input-window-type" class="form-control">
+                {% if window_type %}
+                  <option value="0">{{ text_popup }}</option>
+                  <option value="1" selected="selected">{{ text_floating }}</option>
+                {% else %}
+                  <option value="0" selected="selected">{{ text_popup }}</option>
+                  <option value="1">{{ text_floating }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-title">* {{ entry_size_and_position_window }}</label>
+            <div class="col-sm-10">
+              <div class="row position-floating-window" style="display: none;">
+                <div class="col-sm-5">
+                  <label class="control-label" for="input-top-distance" style="margin-bottom: 10px;">{{ entry_top_distance }}</label>
+                  <input type="text" name="top_distance" value="{{ top_distance }}" placeholder="{{ entry_top_distance }}" id="input-top-distance" class="form-control" />
+                  {% if error_top_distance %}
+                    <div class="text-danger">{{ error_top_distance }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-sm-1">
+                  <label class="control-label" for="input-top-distance-unit" style="margin-bottom: 10px;">&nbsp;</label>
+                  <select name="top_distance_unit" id="input-top-distance-unit" class="form-control">
+                    <option value="px" {% if top_distance_unit == 'px' %}selected="selected"{% endif %}>{{ text_pixel }}</option>
+                    <option value="%" {% if top_distance_unit == '%' %}selected="selected"{% endif %}>{{ text_percent }}</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <label class="control-label" for="input-window-location" style="margin-bottom: 10px;">{{ entry_window_location }}</label>
+                  <select name="window_location" id="input-window-location" class="form-control">
+                      <option value="0" {% if window_location == "0" %}selected="selected"{% endif %}>{{ text_left }}</option>
+                      <option value="1" {% if window_location == "1" %}selected="selected"{% endif %}>{{ text_center }}</option>
+                      <option value="2" {% if window_location == "2" %}selected="selected"{% endif %}>{{ text_right }}</option>
+                  </select>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-sm-3">
                   <label class="control-label" for="input-text" style="margin-bottom: 10px;">{{ entry_width }}</label>
@@ -76,9 +114,20 @@
                   </select>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-sm-12" style="margin-bottom: 10px;">
+                  <label class="control-label" for="input-window-bg" style="margin-bottom: 10px;">{{ entry_window_bg }}</label>
+                  <input type="text" name="window_bg_color" value="{{ window_bg_color }}" placeholder="{{ entry_window_bg_color }}" id="input-window-bg" class="form-control" />
+                </div>
+                <div class="col-sm-12">
+                  <a href="" id="thumb-image0" data-toggle="image" class="img-thumbnail mt-10">
+                    <img src="{{ thumb }}" alt="" title="" data-placeholder="{{ img_placeholder }}"/>
+                  </a>
+                  <input type="hidden" name="window_bg_image" value="{{ window_bg_image }}" id="input-image0"/>
+                </div>
+              </div>
             </div>
           </div>
-
           <div class="form-group">
             <div class="row" style="margin-bottom: 10px;">
               <div class="col-sm-12">
@@ -87,8 +136,7 @@
                   <select name="show_type" id="input-show-type" class="form-control">
                     <option value="0" {% if show_type == '0' %} selected="selected" {% endif %}>{{ text_onclick }}</option>
                     <option value="1" {% if show_type == '1' %} selected="selected" {% endif %}>{{ text_auto }}</option>
-                    <option value="2" {% if show_type == '2' %} selected="selected" {% endif %}>{{ text_onhover }}</option>
-
+                    <option value="2" {% if show_type == '2' %} selected="selected" {% endif %} id="show_type_onhover">{{ text_onhover }}</option>
                   </select>
                 </div>
               </div>
@@ -128,26 +176,6 @@
                 </div>
               </div>
             </div>
-            <div class="row class_onhover" style="margin-bottom: 10px; display: none;">
-              <div class="col-sm-12">
-                <label class="col-sm-2 control-label" for="input-class-onhover"></label>
-                <div class="col-sm-3">
-                  <input type="text" name="class_onhover" value="{{ class_onhover }}" placeholder="{{ entry_class_onhover }}" id="input-class-onhover" class="form-control" />
-                  {% if error_class_onhover %}
-                    <div class="text-danger">{{ error_class_onhover }}</div>
-                  {% endif %}
-                </div>
-                <label class="col-sm-2 control-label" for="input-class-onhover-position">{{ entry_class_onhover_position }}</label>
-                <div class="col-sm-5">
-                  <select name="class_onhover_position" id="input-class-onhover-position" class="form-control">
-                    <option value="top" {% if class_onhover_position == 'top' %} selected="selected" {% endif %}>{{ text_top }}</option>
-                    <option value="bottom" {% if class_onhover_position == 'bottom' %} selected="selected" {% endif %}>{{ text_bottom }}</option>
-                    <option value="left" {% if class_onhover_position == 'left' %} selected="selected" {% endif %}>{{ text_left }}</option>
-                    <option value="right" {% if class_onhover_position == 'right' %} selected="selected" {% endif %}>{{ text_right }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div class="form-group">
@@ -176,34 +204,40 @@
 
   <script type="text/javascript"><!--
 
-if($('#input-show-type').val() === "1") {
-  $('.button_class').hide()
-  $('.class_onhover').hide()
-  $('.show_frequency').show()
-} else if ($('#input-show-type').val() === "0") {
-  $('.button_class').show()
-  $('.class_onhover').hide()
-  $('.show_frequency').hide()
-} else if ($('#input-show-type').val() === "2") {
-  $('.button_class').hide()
-  $('.class_onhover').show()
-  $('.show_frequency').hide()
-}
+    $('#input-window-type').on('change', function () {
+      if ($(this).val() === "1") {
+        $('.position-floating-window').show()
+        $('#show_type_onhover').hide()
+      } else {
+        $('.position-floating-window').hide()
+        $('#show_type_onhover').show()
+      }
+    })
 
-$('#input-show-type').change(function() {
-  if($(this).val() === "1") {
-    $('.button_class').hide()
-    $('.class_onhover').hide()
-    $('.show_frequency').show()
-  } else if($(this).val() === "0") {
-    $('.button_class').show()
-    $('.show_frequency').hide()
-    $('.class_onhover').hide()
-  } else if($(this).val() === "2") {
-    $('.button_class').hide()
-    $('.show_frequency').hide()
-    $('.class_onhover').show()
-  }
-})
+    if ($('#input-window-type').val() === "1") {
+      $('.position-floating-window').show()
+      $('#show_type_onhover').hide()
+    } else {
+      $('.position-floating-window').hide()
+      $('#show_type_onhover').show()
+    }
+
+    if($('#input-show-type').val() === "1") {
+      $('.button_class').hide()
+      $('.show_frequency').show()
+    } else {
+      $('.button_class').show()
+      $('.show_frequency').hide()
+    }
+
+    $('#input-show-type').change(function() {
+      if($(this).val() === "1") {
+        $('.button_class').hide()
+        $('.show_frequency').show()
+      } else {
+        $('.button_class').show()
+        $('.show_frequency').hide()
+      }
+    })
 //--></script></div>
 {{ footer }}

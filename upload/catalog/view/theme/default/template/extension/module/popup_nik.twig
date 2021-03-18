@@ -1,79 +1,189 @@
-{% if show_type == "2" %}
-  <style>
-    .tooltip.in {
-      opacity: 1;
-    }
-    .tooltip-arrow {
-      border-top-color: #ddd !important;
-    }
-    .tooltip-inner {
-      max-width: fit-content;
-      background-color: #fff;
-      color: #000;
-      border: 1px solid #ddd;
-      text-align: left;
-      padding: 5px;
-    }
-    .tooltip-inner p {
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-    }
-  </style>
-{% endif %}
+{% if window_type == '0' %}
 
-{% if show_type != "2" %}
-<style>
-  @media (min-width: 768px) {
-    .modal-dialog{{ module }} {
-    {% if size_type == '0' %} width: {{ width }}px;
-    {% else %} width: {{ width }}vw;
+    {% if show_type == "2" %}
+      <style>
+        .tooltip.in {
+          opacity: 1;
+        }
+        .tooltip-arrow {
+          border-top-color: #ddd !important;
+        }
+        .tooltip-inner {
+          max-width: fit-content;
+          background-color: #fff;
+          color: #000;
+          border: 1px solid #ddd;
+          text-align: left;
+          padding: 5px;
+        }
+        .tooltip-inner p {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+        }
+      </style>
     {% endif %}
-    }
-  }
-  .popup_content_{{ module }} .modal-close {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    opacity: 1;
-    background-color: black;
-    border-radius: 50%;
-    padding: 1px 6px;
-    color: transparent;
-  }
-  .popup_body_{{module}} img {
-    max-width: 100%;
-  }
-</style>
+
+    {% if show_type != "2" %}
+    <style>
+      @media (min-width: 768px) {
+        .modal-dialog{{ module }} {
+        {% if size_type == '0' %} width: {{ width }}px;
+        {% else %} width: {{ width }}vw;
+        {% endif %}
+        }
+      }
+      .popup_content_{{ module }} .modal-close {
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        opacity: 1;
+        background-color: black;
+        border-radius: 50%;
+        padding: 0px 6px 3px;
+        color: transparent;
+      }
+      .popup_body_{{module}} img {
+        max-width: 100%;
+      }
+      .popup_content_{{ module }} {
+        {% if window_bg_color %}
+          background-color: {{ window_bg_color }};
+        {% endif %}
+        {% if window_bg_image %}
+          background: url("{{ window_bg_image }}") {{ window_bg_color }} no-repeat;
+          background-size: cover;
+        {% endif %}
+      }
+    </style>
 
 
-<div id="Modal{{ module }}" class="modal fade popup_{{ module }}" role="dialog">
-  <div class="modal-dialog modal-dialog{{ module }}">
+    <div id="Modal{{ module }}" class="modal fade popup_{{ module }}" role="dialog">
+      <div class="modal-dialog modal-dialog{{ module }}">
 
-    <!-- Modal content-->
-    <div class="modal-content popup_content_{{ module }}">
-      <button type="button" class="close modal-close" data-dismiss="modal">&times;</button>
-      {% if title %}
-      <div class="modal-header popup_header_{{ module }}">
-        <h4 class="modal-title">{{ title }}</h4>
-      </div>
-      {% endif %}
-      <div class="modal-body popup_body_{{ module }}">
-        {{ text }}
+        <!-- Modal content-->
+        <div class="modal-content popup_content_{{ module }}">
+          <button type="button" class="close modal-close" data-dismiss="modal">&times;</button>
+          {% if title %}
+          <div class="modal-header popup_header_{{ module }}">
+            <h4 class="modal-title">{{ title }}</h4>
+          </div>
+          {% endif %}
+          <div class="modal-body popup_body_{{ module }}">
+            {{ text }}
+          </div>
+        </div>
+
       </div>
     </div>
 
+    {% endif %}
+
+{% elseif window_type == '1' %}
+
+  <style>
+    .floating-window {
+      position: fixed;
+      top: {{ top_distance }}{{ top_distance_unit }};
+      z-index: 100;
+      {% if window_bg_color %}
+      background-color: {{ window_bg_color }};
+      {% endif %}
+      {% if window_bg_image %}
+      background: url("{{ window_bg_image }}") {{ window_bg_color }} no-repeat;
+      background-size: cover;
+      {% endif %}
+      {% if window_location == '0' %}
+      left: 0;
+      width: fit-content;
+      {% elseif window_location == '1' %}
+      left: 0;
+      width: 100%;
+      {% elseif window_location == '2' %}
+      right: 0;
+      width: fit-content;
+      {% endif %}
+      padding: 0 30px;
+      display: none;
+    }
+    .floating-window-close {
+      position: absolute;
+      right: 15px;
+      top: 5px;
+      font-size: 25px;
+      cursor: pointer;
+    }
+  </style>
+
+  <div class="floating-window floating-window{{ module }}">
+    <div class="floating-window-content">
+      {{ text }}
+    </div>
+    <div class="floating-window-close floating-window-close{{ module }}">&times;</div>
   </div>
-</div>
 
 {% endif %}
-
 <script type="text/javascript">
-  $(document).ready(function () {
+  {% if window_type == '0' %}
+    $(document).ready(function () {
+      {% if show_type == "0" %}
+        $('.{{ button_class }}').each(function (i, elem) {
+          $(elem).attr('data-toggle', 'modal');
+          $(elem).attr('data-target', '#Modal{{ module }}');
+        });
+      {% elseif show_type == "1" %}
+        let interval = {{ show_freq }};
+        {% if show_freq_type == "0" %}
+        interval = interval * 60 * 1000;
+        {% elseif show_freq_type == "1" %}
+        interval = interval * 60 * 60 * 1000;
+        {% elseif show_freq_type == "2" %}
+        interval = interval * 60 * 60 * 24 * 1000;
+        {% elseif show_freq_type == "3" %}
+        interval = interval * 60 * 60 * 24 * 7 * 1000;
+        {% elseif show_freq_type == "4" %}
+        interval = interval * 60 * 60 * 24 * 7 * 30 * 1000;
+        {% endif %}
+        setInterval(function () {
+          autoPopup(interval)
+        }, 3000);
+      {% else %}
+        $('.{{ button_class }}').each(function (i, elem) {
+          $(elem).attr('data-toggle', 'tooltip');
+          $(elem).attr('data-html', 'true');
+          $(elem).attr('title', '{{ text }}');
+          $(elem).tooltip({
+            animated: 'fade',
+            placement: 'top',
+            html: true
+          });
+        });
+      {% endif  %}
+    })
+
+    function autoPopup(interval) {
+      let now = new Date();
+
+      let popupTimestamp = getCookie("popup{{ module }}");
+      if(popupTimestamp) {
+        if(parseInt(popupTimestamp) < now.getTime()) {
+          // show modal and rewrite timestamp
+          $('#Modal{{ module }}').modal('show');
+          setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+        }
+      } else {
+        // write timestamp
+        setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+      }
+    }
+
+
+  // floating window scripts
+  {% else %}
+
     {% if show_type == "0" %}
       $('.{{ button_class }}').each(function (i, elem) {
-        $(elem).attr('data-toggle', 'modal');
-        $(elem).attr('data-target', '#Modal{{ module }}');
+          showFloatWindow(elem)
       });
     {% elseif show_type == "1" %}
       let interval = {{ show_freq }};
@@ -89,37 +199,37 @@
       interval = interval * 60 * 60 * 24 * 7 * 30 * 1000;
       {% endif %}
       setInterval(function () {
-        autoPopup(interval)
+          autoFloatWindow(interval)
       }, 3000);
-    {% else %}
-      $('.{{ class_onhover }}').each(function (i, elem) {
-        $(elem).attr('data-toggle', 'tooltip');
-        $(elem).attr('data-html', 'true');
-        $(elem).attr('title', '{{ text }}');
-        $(elem).tooltip({
-          animated: 'fade',
-          placement: '{{ class_onhover_position }}',
-          html: true
-        });
-      });
-    {% endif  %}
+    {% endif %}
+
+  $('.floating-window-close{{ module }}').on('click', function () {
+    $('.floating-window{{ module }}').hide()
   })
 
-  function autoPopup(interval) {
-    let now = new Date();
-
-    let popupTimestamp = getCookie("popup{{ module }}");
-    if(popupTimestamp) {
-      if(parseInt(popupTimestamp) < now.getTime()) {
-        // show modal and rewrite timestamp
-        $('#Modal{{ module }}').modal('show');
-        setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
-      }
-    } else {
-      // write timestamp
-      setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
-    }
+  function showFloatWindow(elem) {
+    $(elem).on('click', function () {
+      $('.floating-window{{ module }}').show()
+    })
   }
+
+  function autoFloatWindow(interval) {
+      let now = new Date();
+
+      let popupTimestamp = getCookie("floatWindow{{ module }}");
+      if(popupTimestamp) {
+          if(parseInt(popupTimestamp) < now.getTime()) {
+              // show modal and rewrite timestamp
+              $('.floating-window{{ module }}').show();
+              setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+          }
+      } else {
+          // write timestamp
+          setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+      }
+  }
+
+  {% endif %}
 
   // возвращает куки с указанным name,
   // или undefined, если ничего не найдено
