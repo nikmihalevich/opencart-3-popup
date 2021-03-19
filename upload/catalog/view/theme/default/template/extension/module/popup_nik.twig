@@ -95,16 +95,20 @@
       {% endif %}
       {% if window_location == '0' %}
       left: 0;
-      width: fit-content;
       {% elseif window_location == '1' %}
+      margin: 0 auto;
       left: 0;
-      width: 100%;
+      right: 0;
       {% elseif window_location == '2' %}
       right: 0;
-      width: fit-content;
       {% endif %}
       padding: 0 30px;
       display: none;
+      {% if size_type == '0' %}
+        width: {{ width }}px;
+      {% else %}
+        width: {{ width }}vw;
+      {% endif %}
     }
     .floating-window-close {
       position: absolute;
