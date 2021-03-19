@@ -173,11 +173,11 @@
         if(parseInt(popupTimestamp) < now.getTime()) {
           // show modal and rewrite timestamp
           $('#Modal{{ module }}').modal('show');
-          setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+          setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
         }
       } else {
         // write timestamp
-        setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+        setCookie('popup{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
       }
     }
 
@@ -225,11 +225,11 @@
           if(parseInt(popupTimestamp) < now.getTime()) {
               // show modal and rewrite timestamp
               $('.floating-window{{ module }}').show();
-              setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+              setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
           }
       } else {
           // write timestamp
-          setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 10000) })
+          setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
       }
   }
 
