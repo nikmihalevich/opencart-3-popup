@@ -8,6 +8,7 @@ $_['text_success']     = 'Настройки успешно изменены!';
 $_['text_edit']        = 'Настройки модуля';
 $_['text_popup']       = 'Попап окно';
 $_['text_floating']    = 'Плавающее окно';
+$_['text_block']       = 'Блочное окно';
 $_['text_pixel']       = 'px';
 $_['text_percent']     = '%';
 $_['text_center']      = 'По центру';

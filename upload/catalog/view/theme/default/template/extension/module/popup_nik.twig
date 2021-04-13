@@ -126,6 +126,44 @@
     <div class="floating-window-close floating-window-close{{ module }}">&times;</div>
   </div>
 
+{% elseif window_type == '2' %}
+  <style>
+    .block-window {
+      display: none;
+      z-index: 100;
+    {% if window_bg_color %}
+      background-color: {{ window_bg_color }};
+    {% endif %}
+    {% if window_bg_image %}
+      background: url("{{ window_bg_image }}") {{ window_bg_color }} no-repeat;
+      background-size: cover;
+    {% endif %}
+      padding: 8px 30px;
+    {% if size_type == '0' %}
+      width: {{ width }}px;
+    {% else %}
+      width: {{ width }}%;
+    {% endif %}
+    }
+    .block-window-content p {
+      padding: 0;
+      margin: 0;
+    }
+    .block-window-close {
+      position: absolute;
+      right: 15px;
+      top: 5px;
+      font-size: 25px;
+      cursor: pointer;
+    }
+  </style>
+
+  <div class="block-window block-window{{ module }}">
+    <div class="block-window-content">
+      {{ text }}
+    </div>
+    <div class="block-window-close block-window-close{{ module }}">&times;</div>
+  </div>
 {% endif %}
 <script type="text/javascript">
   {% if window_type == '0' %}
@@ -183,7 +221,7 @@
 
 
   // floating window scripts
-  {% else %}
+  {% elseif window_type == '1' %}
 
     {% if show_type == "0" %}
       $('.{{ button_class }}').each(function (i, elem) {
@@ -207,31 +245,82 @@
       }, 3000);
     {% endif %}
 
-  $('.floating-window-close{{ module }}').on('click', function () {
-    $('.floating-window{{ module }}').hide()
-  })
-
-  function showFloatWindow(elem) {
-    $(elem).on('click', function () {
-      $('.floating-window{{ module }}').show()
+    $('.floating-window-close{{ module }}').on('click', function () {
+      $('.floating-window{{ module }}').hide()
     })
-  }
 
-  function autoFloatWindow(interval) {
-      let now = new Date();
+    function showFloatWindow(elem) {
+      $(elem).on('click', function () {
+        $('.floating-window{{ module }}').show()
+      })
+    }
 
-      let popupTimestamp = getCookie("floatWindow{{ module }}");
-      if(popupTimestamp) {
-          if(parseInt(popupTimestamp) < now.getTime()) {
-              // show modal and rewrite timestamp
-              $('.floating-window{{ module }}').show();
-              setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
-          }
-      } else {
-          // write timestamp
-          setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
-      }
-  }
+    function autoFloatWindow(interval) {
+        let now = new Date();
+
+        let popupTimestamp = getCookie("floatWindow{{ module }}");
+        if(popupTimestamp) {
+            if(parseInt(popupTimestamp) < now.getTime()) {
+                // show modal and rewrite timestamp
+                $('.floating-window{{ module }}').show();
+                setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
+            }
+        } else {
+            // write timestamp
+            setCookie('floatWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
+        }
+    }
+
+  {% elseif window_type == '2' %}
+
+    {% if show_type == "0" %}
+      $('.{{ button_class }}').each(function (i, elem) {
+          showBlockWindow(elem)
+      });
+      {% elseif show_type == "1" %}
+      let interval = {{ show_freq }};
+      {% if show_freq_type == "0" %}
+      interval = interval * 60 * 1000;
+      {% elseif show_freq_type == "1" %}
+      interval = interval * 60 * 60 * 1000;
+      {% elseif show_freq_type == "2" %}
+      interval = interval * 60 * 60 * 24 * 1000;
+      {% elseif show_freq_type == "3" %}
+      interval = interval * 60 * 60 * 24 * 7 * 1000;
+      {% elseif show_freq_type == "4" %}
+      interval = interval * 60 * 60 * 24 * 7 * 30 * 1000;
+      {% endif %}
+      setInterval(function () {
+          autoBlockWindow(interval)
+      }, 3000);
+    {% endif %}
+
+    $('.block-window-close{{ module }}').on('click', function () {
+        $('.block-window{{ module }}').hide()
+    })
+
+    function showBlockWindow(elem) {
+        $(elem).on('click', function () {
+            $('body').prepend($('.block-window{{ module }}'))
+            $('.block-window{{ module }}').show()
+        })
+    }
+
+    function autoBlockWindow(interval) {
+        let now = new Date();
+
+        let popupTimestamp = getCookie("blockWindow{{ module }}");
+        if(popupTimestamp) {
+            if(parseInt(popupTimestamp) < now.getTime()) {
+                // show modal and rewrite timestamp
+                $('.block-window{{ module }}').show();
+                setCookie('blockWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
+            }
+        } else {
+            // write timestamp
+            setCookie('blockWindow{{ module }}', (now.getTime() + interval), { 'max-age': (interval + 2628000) })
+        }
+    }
 
   {% endif %}
 

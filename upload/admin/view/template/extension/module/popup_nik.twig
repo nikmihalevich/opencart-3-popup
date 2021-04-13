@@ -56,13 +56,9 @@
             <label class="col-sm-2 control-label" for="input-window-type">{{ entry_window_type }}</label>
             <div class="col-sm-10">
               <select name="window_type" id="input-window-type" class="form-control">
-                {% if window_type %}
-                  <option value="0">{{ text_popup }}</option>
-                  <option value="1" selected="selected">{{ text_floating }}</option>
-                {% else %}
-                  <option value="0" selected="selected">{{ text_popup }}</option>
-                  <option value="1">{{ text_floating }}</option>
-                {% endif %}
+                  <option value="0" {% if window_type == "0" %}selected="selected"{% endif %}>{{ text_popup }}</option>
+                  <option value="1" {% if window_type == "1" %}selected="selected"{% endif %}>{{ text_floating }}</option>
+                  <option value="2" {% if window_type == "2" %}selected="selected"{% endif %}>{{ text_block }}</option>
               </select>
             </div>
           </div>
